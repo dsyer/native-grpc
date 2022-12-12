@@ -60,4 +60,4 @@ $ ./target/demo
 2022-12-08T05:36:54.396-08:00  INFO 554359 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 0.046 seconds (process running for 0.052)
 ```
 
-The patches needed to make it work in native were a reflection hint (upstream change: https://github.com/netty/netty/pull/13039) and some autoconfig metadata (upstream change: https://github.com/yidongnan/grpc-spring-boot-starter/pull/775).
+The patches needed to make it work in native were a reflection hint (upstream change: https://github.com/oracle/graalvm-reachability-metadata/pull/148) and some autoconfig metadata (upstream change: https://github.com/yidongnan/grpc-spring-boot-starter/pull/775).

@@ -1,16 +1,17 @@
 package com.example.demo;
 
-import org.springframework.aot.hint.MemberCategory;
-import org.springframework.aot.hint.RuntimeHints;
-import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportRuntimeHints;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
-import io.netty.buffer.AbstractByteBufAllocator;
+import io.grpc.ServerInterceptor;
+import io.micrometer.core.instrument.binder.grpc.ObservationGrpcServerInterceptor;
+import io.micrometer.observation.ObservationRegistry;
+import net.devh.boot.grpc.common.util.InterceptorOrder;
+import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
 
 @SpringBootApplication
-@ImportRuntimeHints(DemoApplicationRuntimeHints.class)
 public class DemoApplication {
 
 	public static void main(String[] args) {
@@ -19,11 +20,20 @@ public class DemoApplication {
 
 }
 
-class DemoApplicationRuntimeHints implements RuntimeHintsRegistrar {
+@Configuration
+class MicrometerTracingConfiguration {
 
-    @Override
-    public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-        hints.reflection().registerType(AbstractByteBufAllocator.class, MemberCategory.INVOKE_DECLARED_METHODS);
-    }
+	/**
+	 * Configures a global server interceptor that applies micrometer tracing logic to
+	 * the requests.
+	 *
+	 * @param observations The observation registry bean.
+	 * @return The tracing server interceptor bean.
+	 */
+	@GrpcGlobalServerInterceptor
+	@Order(InterceptorOrder.ORDER_TRACING_METRICS + 1)
+	public ServerInterceptor globalTraceServerInterceptorConfigurer(final ObservationRegistry observations) {
+		return new ObservationGrpcServerInterceptor(observations);
+	}
 
 }

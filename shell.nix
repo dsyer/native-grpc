@@ -2,5 +2,5 @@ with import <nixpkgs> { };
 
 mkShell {
   name = "env";
-  buildInputs = [ grpcurl ];
+  buildInputs = [ gcc zlib zlib.static grpcurl ];
 }

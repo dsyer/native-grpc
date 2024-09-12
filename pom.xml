@@ -81,8 +81,12 @@
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
-                    <buildArgs>--trace-class-initialization=org.slf4j.LoggerFactory
-                        -H:+ReportExceptionStackTraces</buildArgs>
+                    <buildArgs>
+                        <buildArg>-ENIX_LDFLAGS</buildArg>
+                        <buildArg>-ENIX_CC_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu</buildArg>
+                        <buildArg>--trace-class-initialization=org.slf4j.LoggerFactory</buildArg>
+                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                    </buildArgs>
                 </configuration>
             </plugin>
             <plugin>

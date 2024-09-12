@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.example.demo.proto.HelloReply;
 import com.example.demo.proto.HelloRequest;
@@ -14,6 +14,7 @@ import io.grpc.Grpc;
 import io.grpc.InsecureChannelCredentials;
 
 @SpringBootTest
+@DirtiesContext
 class AnotherApplicationTests {
 
 	@Test

@@ -9,19 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.grpc.client.GrpcChannelFactory;
-import org.springframework.grpc.server.lifecycle.GrpcServerStartedEvent;
 import org.springframework.grpc.test.LocalGrpcPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.example.demo.proto.HelloReply;
 import com.example.demo.proto.HelloRequest;
 import com.example.demo.proto.SimpleGrpc;
-
-import io.grpc.Server;
 
 @SpringBootTest(properties = { "spring.grpc.client.channels.test.address=static://localhost:9090",
 		"spring.grpc.client.channels.test.negotiationType=plaintext" })
@@ -50,19 +46,7 @@ public class DemoApplicationTests {
 	}
 
 	@TestConfiguration
-	static class TestListener implements ApplicationListener<GrpcServerStartedEvent> {
-
-		private Server server;
-
-		@Override
-		public void onApplicationEvent(GrpcServerStartedEvent event) {
-			this.server = event.getServer();
-		}
-
-		public Server getServer() {
-			return this.server;
-		}
-
+	static class TestListener {
 
 		@Bean
 		@Lazy

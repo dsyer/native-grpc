@@ -5,10 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.grpc.client.GrpcChannelFactory;
+import org.springframework.grpc.server.lifecycle.GrpcServerStartedEvent;
+import org.springframework.grpc.test.LocalGrpcPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.example.demo.proto.HelloReply;
@@ -16,11 +22,9 @@ import com.example.demo.proto.HelloRequest;
 import com.example.demo.proto.SimpleGrpc;
 
 import io.grpc.Server;
-import net.devh.boot.grpc.client.inject.GrpcClient;
-import net.devh.boot.grpc.server.event.GrpcServerStartedEvent;
 
-@SpringBootTest(properties = { "grpc.client.test.address=static://localhost:9090",
-		"grpc.client.test.negotiationType=plaintext" })
+@SpringBootTest(properties = { "spring.grpc.client.channels.test.address=static://localhost:9090",
+		"spring.grpc.client.channels.test.negotiationType=plaintext" })
 public class DemoApplicationTests {
 
 	private static Log log = LogFactory.getLog(DemoApplicationTests.class);
@@ -29,7 +33,7 @@ public class DemoApplicationTests {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@GrpcClient("test")
+	@Autowired
 	private SimpleGrpc.SimpleBlockingStub stub;
 
 	@Test
@@ -59,6 +63,13 @@ public class DemoApplicationTests {
 			return this.server;
 		}
 
+
+		@Bean
+		@Lazy
+		SimpleGrpc.SimpleBlockingStub stub(GrpcChannelFactory channels, @LocalGrpcPort int port) {
+			return SimpleGrpc.newBlockingStub(channels.createChannel("0.0.0.0:" + port).build());
+		}
+	
 	}
 
 }

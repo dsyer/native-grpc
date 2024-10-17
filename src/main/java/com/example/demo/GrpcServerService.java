@@ -3,15 +3,15 @@ package com.example.demo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.proto.HelloReply;
 import com.example.demo.proto.HelloRequest;
 import com.example.demo.proto.SimpleGrpc;
 
 import io.grpc.stub.StreamObserver;
-import net.devh.boot.grpc.server.service.GrpcService;
 
-@GrpcService
+@Service
 public class GrpcServerService extends SimpleGrpc.SimpleImplBase {
 
     private static Log log = LogFactory.getLog(GrpcServerService.class);

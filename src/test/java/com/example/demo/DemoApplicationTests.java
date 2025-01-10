@@ -25,6 +25,7 @@ public class DemoApplicationTests {
 	private static Log log = LogFactory.getLog(DemoApplicationTests.class);
 
 	public static void main(String[] args) {
+		System.setProperty("io.netty.bootstrap.extensions", "serviceload");
 		SpringApplication.run(DemoApplication.class, args);
 	}
 

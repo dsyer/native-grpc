@@ -9,17 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.grpc.client.GrpcChannelFactory;
-import org.springframework.grpc.test.LocalGrpcPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.example.demo.proto.HelloReply;
 import com.example.demo.proto.HelloRequest;
 import com.example.demo.proto.SimpleGrpc;
 
-@SpringBootTest(properties = "spring.grpc.client.channels.test.address=static://localhost:0")
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
+		"spring.grpc.client.channels.test.address=static://localhost:0" })
 public class DemoApplicationTests {
 
 	private static Log log = LogFactory.getLog(DemoApplicationTests.class);
@@ -49,7 +51,7 @@ public class DemoApplicationTests {
 
 		@Bean
 		@Lazy
-		SimpleGrpc.SimpleBlockingStub stub(GrpcChannelFactory channels, @LocalGrpcPort int port) {
+		SimpleGrpc.SimpleBlockingStub stub(GrpcChannelFactory channels, @LocalServerPort int port) {
 			return SimpleGrpc.newBlockingStub(channels.createChannel("0.0.0.0:" + port));
 		}
 

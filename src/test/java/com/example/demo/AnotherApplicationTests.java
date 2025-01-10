@@ -13,7 +13,7 @@ import com.example.demo.proto.SimpleGrpc;
 import io.grpc.Grpc;
 import io.grpc.InsecureChannelCredentials;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext
 class AnotherApplicationTests {
 

@@ -45,10 +45,17 @@ Encode the message:
 $ echo 'name:"Hi"' | protoc --encode=HelloRequest src/main/proto/hello.proto > target/req.buf
 ```
 
-Have a look at the encoded data and you will find it is a vanilla protobuf `\x0a\x02\x48\x69` - the first and only field is a string (`\x0a`) with length 2 (`\x02`) and value "Hi". To send it as a [gRPC message](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md) you need a 5-byte prefix of `\x00` (compression flag off) plus the length of the message in big-endian format (in this case `\x04`). You can use `printf` to generate the prefix and `curl` to send it:
+Have a look at the encoded data and you will find it is a vanilla protobuf `\x0a\x02\x48\x69`
 
 ```
-$ printf '\x00\x00\x00\x00\x04' | curl --http2-prior-knowledge -H "TE: trailers" -v -H "Content-Type: application/grpc" --data-binary @- localhost:9090/Simple/SayHello > target/res.buf
+$ od -v -tx1 -A n target/req.buf | tr -d ' \n' | sed 's/../\\x&/g'
+\x0a\x02\x48\x69
+```
+
+The first and only field is a string (`\x0a`) with length 2 (`\x02`) and value "Hi". To send it as a [gRPC message](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md) you need a 5-byte prefix of `\x00` (compression flag off) plus the length of the message in big-endian format (in this case `\x04`). You can use `printf` to generate the prefix and `curl` to send it:
+
+```
+$ printf '\x00\x00\x00\x00\x04\x0a\x02\x48\x69' | curl --http2-prior-knowledge -H "TE: trailers" -v -H "Content-Type: application/grpc" --data-binary @- localhost:9090/Simple/SayHello > target/res.buf
 ```
 
 (With a servlet container you can skip the `--http2-prior-knowledge` flag).

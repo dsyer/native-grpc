@@ -50,7 +50,7 @@ public class DemoApplicationTests {
 		@Bean
 		@Lazy
 		SimpleGrpc.SimpleBlockingStub stub(GrpcChannelFactory channels, @LocalGrpcPort int port) {
-			return SimpleGrpc.newBlockingStub(channels.createChannel("0.0.0.0:" + port).build());
+			return SimpleGrpc.newBlockingStub(channels.createChannel("0.0.0.0:" + port));
 		}
 
 	}
